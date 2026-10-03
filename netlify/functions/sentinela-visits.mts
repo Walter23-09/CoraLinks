@@ -8,7 +8,7 @@ export default async function(req:Request){
  try{
   const url=new URL(req.url),store=getStore({name:'sentinela-visits-v1',consistency:'strong'});
   if(req.method==='GET'){
-   const expected=Netlify.env.get('SENTINELA_ANALYTICS_READ_KEY')||'',provided=(req.headers.get('authorization')||'').replace(/^Bearer /,'');
+   const expected=process.env.SENTINELA_ANALYTICS_READ_KEY||'',provided=(req.headers.get('authorization')||'').replace(/^Bearer /,'');
    if(!/^[a-f0-9]{64}$/.test(provided))return reply({error:'Unauthorized'},401);
    if(!expected)return reply({error:'Analytics configuration unavailable'},503);
    if(expected.length!==provided.length||!timingSafeEqual(Buffer.from(expected),Buffer.from(provided)))return reply({error:'Unauthorized'},401);
